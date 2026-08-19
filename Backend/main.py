@@ -51,11 +51,25 @@ origins = configured_origins + [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origin_regex=r"https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def preserve_deployment_cors_headers(request, call_next):
+    """Keep CORS headers on API errors as well as successful responses."""
+    response = await call_next(request)
+    origin = request.headers.get("origin", "").rstrip("/")
+    if origin in origins or origin.endswith(".vercel.app"):
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Vary"] = "Origin"
+    return response
 
 
 @app.exception_handler(Exception)
