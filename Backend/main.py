@@ -61,7 +61,14 @@ app.add_middleware(
 @app.middleware("http")
 async def preserve_deployment_cors_headers(request, call_next):
     """Keep CORS headers on API errors as well as successful responses."""
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        print("Unhandled API error:", repr(exc))
+        response = JSONResponse(
+            status_code=500,
+            content={"detail": "The server could not process this request."},
+        )
     origin = request.headers.get("origin", "").rstrip("/")
     if origin in origins or origin.endswith(".vercel.app"):
         response.headers["Access-Control-Allow-Origin"] = origin
