@@ -98,7 +98,6 @@ activity = db["activity"]
 groq_client = groq.Groq(
     api_key=os.getenv("groq_API")
 )
-print("API Key:", os.getenv("groq_API"))
 
 
 
