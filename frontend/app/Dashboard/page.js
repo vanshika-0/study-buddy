@@ -279,7 +279,7 @@ const Page = () => {
           </div>
 
           {/* Today's Schedule + Revision */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
             <section className={`${sectionBase} border-pink-100`}>
               <div className="flex items-end justify-between gap-3 mb-5">
                 <div>
@@ -433,7 +433,7 @@ const Page = () => {
           </div>
 
           {/* Test Score Trend + Weekly Progress */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
             <section className={`${sectionBase} border-pink-100`}>
               <div className="flex items-center justify-between gap-2 mb-5">
                 <div>

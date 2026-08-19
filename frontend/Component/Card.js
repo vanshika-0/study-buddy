@@ -6,7 +6,7 @@ const Card = ({ title, value, icon }) => {
     <div
       className="
         group relative flex items-center gap-4
-        w-full sm:w-[22%] min-w-0 m-2 p-6 h-40
+        w-full min-w-0 m-0 p-6 h-40
         bg-white border-2 border-pink-100 rounded-3xl
         shadow-[0_6px_0_0_rgba(244,194,213,0.6)]
         text-gray-700
