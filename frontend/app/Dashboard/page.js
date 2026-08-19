@@ -614,6 +614,45 @@ const Page = () => {
             </section>
           </div>
 
+          {/* AI Recommendation */}
+          <section className={`${sectionBase} border-pink-100`}>
+            <h2 className="text-lg font-bold text-gray-800">
+              AI recommendation
+            </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Personalized from your recent scores, weak areas, and study time.
+            </p>
+
+            {recommendations.length ? (
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {recommendations.map((item) => (
+                  <div key={item.topic} className="rounded-2xl bg-pink-50 p-4">
+                    <p className="font-semibold text-gray-800">{item.topic}</p>
+                    <p
+                      className={`mt-1 text-sm ${
+                        item.accuracy >= 80
+                          ? "text-emerald-600"
+                          : item.accuracy >= 60
+                            ? "text-amber-600"
+                            : "text-rose-600"
+                      }`}
+                    >
+                      {item.accuracy >= 80
+                        ? "Strong area"
+                        : item.accuracy >= 60
+                          ? "Moderate focus · 3–4 hrs"
+                          : "Needs more focus · 5–6 hrs"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 rounded-2xl bg-pink-50 p-4 text-sm text-pink-700">
+                Complete a test to receive personalized recommendations.
+              </p>
+            )}
+          </section>
+
 
           {/* Activity heatmap */}
           <section className={`${sectionBase} border-green-100`}>
