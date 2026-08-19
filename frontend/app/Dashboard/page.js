@@ -13,6 +13,8 @@ const toLocalDateString = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+const freshFetchOptions = { cache: "no-store" };
+
 const activityColor = (count, maximum) => {
   if (count === 0) return "#e5e7eb";
   const level = count / maximum;
@@ -60,12 +62,15 @@ const Page = () => {
           await Promise.all([
             fetch(
               apiUrl(`/api/dashboard/activity?email=${encodeURIComponent(email)}`),
+              freshFetchOptions,
             ),
             fetch(
               apiUrl(`/api/dashboard/today-schedule?email=${encodeURIComponent(email)}`),
+              freshFetchOptions,
             ),
             fetch(
               apiUrl(`/api/dashboard/revision-tasks?email=${encodeURIComponent(email)}`),
+              freshFetchOptions,
             ),
           ]);
         if (
@@ -112,6 +117,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/updateTask"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           docId: taskToUpdate.docId,
@@ -171,6 +177,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/updateTask"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           docId: taskToUpdate.docId,

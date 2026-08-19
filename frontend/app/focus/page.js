@@ -268,6 +268,7 @@ export default function FocusPage() {
     if (!email) return;
     fetch(
       apiUrl(`/api/dashboard/today-schedule?email=${encodeURIComponent(email)}`),
+      { cache: "no-store" },
     )
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => d?.tasks && setTasks(d.tasks.map((x) => x.task)))
@@ -290,6 +291,7 @@ export default function FocusPage() {
     try {
       const r = await fetch(apiUrl("/api/pomodoro/study-time"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, duration }),
       });

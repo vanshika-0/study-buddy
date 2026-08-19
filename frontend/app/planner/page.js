@@ -15,6 +15,13 @@ import {
 } from "lucide-react";
 import { apiUrl } from "@/lib/api";
 
+const toLocalDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const Page = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState();
@@ -82,6 +89,7 @@ const Page = () => {
       try {
         const response = await fetch(apiUrl("/getHistory"), {
           method: "POST",
+          cache: "no-store",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         });
@@ -119,6 +127,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/deleteTask"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ docId, taskIndex: originalIndex }),
       });
@@ -143,6 +152,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/planner"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input, email }),
       });
@@ -214,6 +224,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/updateTask"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           docId,
@@ -291,6 +302,7 @@ const Page = () => {
     try {
       const response = await fetch(apiUrl("/addTask"), {
         method: "POST",
+        cache: "no-store",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ docId, task: newItem }),
       });
@@ -330,7 +342,7 @@ const Page = () => {
     for (let i = 0; i < startOffset; i++) cells.push(null);
     for (let d = 1; d <= lastOfMonth.getDate(); d++) {
       const dateObj = new Date(year, month, d);
-      const iso = dateObj.toISOString().split("T")[0];
+      const iso = toLocalDateString(dateObj);
       cells.push(iso);
     }
     while (cells.length % 7 !== 0) cells.push(null);

@@ -31,10 +31,24 @@ from pydantic import EmailStr
 
 #2
 from pymongo import MongoClient
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 
 load_dotenv()
+
+# The app's calendar is based on the user's local Indian time, while MongoDB
+# timestamps remain UTC. Keeping this explicit prevents a UTC deployment from
+# treating late-night/early-morning sessions as belonging to the wrong day.
+APP_TIMEZONE = ZoneInfo(os.getenv("APP_TIMEZONE", "Asia/Kolkata"))
+
+
+def local_now():
+    return datetime.now(APP_TIMEZONE)
+
+
+def local_today():
+    return local_now().date()
 
 app = FastAPI()
 
@@ -79,6 +93,10 @@ async def preserve_deployment_cors_headers(request, call_next):
         response.headers["Access-Control-Allow-Methods"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "*"
         response.headers["Vary"] = "Origin"
+    if request.url.path.startswith(("/api/", "/planner", "/getHistory", "/updateTask", "/addTask", "/deleteTask")):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     return response
 
 
@@ -186,7 +204,7 @@ async def save_pomodoro_study_time(data: StudyTimeRequest):
     if not users.find_one({"email": email}, {"_id": 1}):
         raise HTTPException(status_code=404, detail="User not found")
 
-    today = datetime.now().date().isoformat()
+    today = local_today().isoformat()
 
     # First, atomically increment today's existing array item.
     result = users.update_one(
@@ -232,6 +250,7 @@ def home():
 async def planner(data: PlannerRequest):
     print("email planner",data.email); 
     try:
+        today = local_today().isoformat()
         prompt = f"""
 You are an expert AI Study Planner.
 
@@ -268,8 +287,9 @@ Rules:
 3. Don't explain anything.
 4. Respect all timings given by the user.
 5. Add breaks where appropriate.
-6. If the user doesn't specify a date, assume today.
-7. Ensure no overlapping tasks.
+6. If the user doesn't specify a date, use today's date: {today}.
+7. Never use the example date from this prompt; use {today} when today is requested.
+8. Ensure no overlapping tasks.
 
 User Input:
 {data.prompt}
@@ -310,6 +330,8 @@ User Input:
         insert_result = history.insert_one({
             "email": data.email,
             "history": parsed_content,
+            "createdAt": datetime.now(timezone.utc),
+            "updatedAt": datetime.now(timezone.utc),
         })
 
         return {
@@ -326,7 +348,11 @@ class EmailRequest(BaseModel):
 
 @app.post("/getHistory")
 async def get_history(data: EmailRequest):
-    cursor = history.find({"email": data.email}).sort("_id", -1).limit(1)
+    cursor = history.find({"email": data.email}).sort([
+        ("updatedAt", -1),
+        ("createdAt", -1),
+        ("_id", -1),
+    ]).limit(1)
     result = list(cursor)
 
     if not result:
@@ -371,7 +397,7 @@ def build_user_activity(email: str):
             completed_by_date[task_date] = completed_by_date.get(task_date, 0) + 1
 
     active_days = {datetime.strptime(day, "%Y-%m-%d").date() for day in completed_by_date}
-    today = datetime.now().date()
+    today = local_today()
 
     def consecutive_days_ending_on(end_day):
         streak = 0
@@ -414,7 +440,7 @@ def get_study_time_summary(email: str):
         if isinstance(day, str) and isinstance(seconds, (int, float)):
             study_by_date[day] = study_by_date.get(day, 0) + max(0, int(seconds))
 
-    today = datetime.now().date()
+    today = local_today()
     monday = today - timedelta(days=today.weekday())
     weekly_study_time = []
     for offset in range(7):
@@ -450,7 +476,7 @@ async def get_dashboard_activity(email: str):
         raise HTTPException(status_code=404, detail="User not found")
 
     summary = build_user_activity(email)
-    first_day = (datetime.now().date() - timedelta(days=364)).isoformat()
+    first_day = (local_today() - timedelta(days=364)).isoformat()
     summary["dailyActivity"] = [
         item for item in summary["dailyActivity"] if item["date"] >= first_day
     ]
@@ -466,10 +492,11 @@ async def get_today_schedule(email: str):
     if not users.find_one({"email": email}, {"_id": 1}):
         raise HTTPException(status_code=404, detail="User not found")
 
-    today = datetime.now().date().isoformat()
+    today = local_today().isoformat()
     tasks = []
     latest_history = history.find_one(
-        {"email": email}, {"history": 1}, sort=[("_id", -1)]
+        {"email": email}, {"history": 1},
+        sort=[("updatedAt", -1), ("createdAt", -1), ("_id", -1)]
     )
     if latest_history:
         schedule = get_schedule_from_doc(latest_history)
@@ -498,10 +525,11 @@ async def get_revision_tasks(email: str):
     if not users.find_one({"email": email}, {"_id": 1}):
         raise HTTPException(status_code=404, detail="User not found")
 
-    today = datetime.now().date().isoformat()
+    today = local_today().isoformat()
     tasks = []
     latest_history = history.find_one(
-        {"email": email}, {"history": 1}, sort=[("_id", -1)]
+        {"email": email}, {"history": 1},
+        sort=[("updatedAt", -1), ("createdAt", -1), ("_id", -1)]
     )
     if latest_history:
         for task_index, task in enumerate(get_schedule_from_doc(latest_history)):
@@ -540,7 +568,10 @@ async def update_task(data: UpdateTaskRequest):
     # Always write back in the new dict format, so it self-heals
     history.update_one(
         {"_id": ObjectId(data.docId)},
-        {"$set": {"history": {"schedule": schedule}}}
+        {"$set": {
+            "history": {"schedule": schedule},
+            "updatedAt": datetime.now(timezone.utc),
+        }}
     )
 
     build_user_activity(user_doc["email"])
@@ -562,7 +593,10 @@ async def add_task(data: AddTaskRequest):
 
     history.update_one(
         {"_id": ObjectId(data.docId)},
-        {"$set": {"history": {"schedule": schedule}}}
+        {"$set": {
+            "history": {"schedule": schedule},
+            "updatedAt": datetime.now(timezone.utc),
+        }}
     )
 
     build_user_activity(user_doc["email"])
@@ -588,7 +622,10 @@ async def delete_task(data: DeleteTaskRequest):
 
     history.update_one(
         {"_id": ObjectId(data.docId)},
-        {"$set": {"history": {"schedule": schedule}}}
+        {"$set": {
+            "history": {"schedule": schedule},
+            "updatedAt": datetime.now(timezone.utc),
+        }}
     )
 
     build_user_activity(user_doc["email"])
@@ -670,7 +707,7 @@ async def signup(data:user):
     print("otp",otp)
 
       # 4. Expiry time
-    expires_at=datetime.now()+ timedelta(minutes=5)
+    expires_at=local_now().replace(tzinfo=None)+ timedelta(minutes=5)
        # 5. Remove old OTP if exists
     otp_collection.delete_many({"email":data.email})
 
@@ -1056,7 +1093,7 @@ async def submit_test(data: TestAttemptRequest):
         "topicPerformance": {data.topic: {"correct": correct, "total": total, "accuracy": accuracy}},
         "understandingScore": data.advancedOptions.get("understandingScore"),
         "strengths": data.advancedOptions.get("strengths", []),
-        "createdAt": datetime.now(),
+        "createdAt": datetime.now(timezone.utc),
     })
     Tests.insert_one(attempt)
     # PyMongo adds `_id: ObjectId(...)` to the dict passed to insert_one.
@@ -1068,18 +1105,23 @@ async def submit_test(data: TestAttemptRequest):
     def attempt_day(item):
         created_at = item.get("createdAt")
         if isinstance(created_at, datetime):
-            return created_at.date()
+            if created_at.tzinfo is None:
+                created_at = created_at.replace(tzinfo=timezone.utc)
+            return created_at.astimezone(APP_TIMEZONE).date()
         if isinstance(created_at, str):
             try:
-                return datetime.fromisoformat(created_at.replace("Z", "+00:00")).date()
+                parsed = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                return parsed.astimezone(APP_TIMEZONE).date()
             except ValueError:
                 pass
         # Older score-only test documents do not have createdAt.
-        return datetime.now().date()
+        return local_today()
 
     unique_days = sorted({attempt_day(item) for item in all_attempts}, reverse=True)
     streak = 0
-    cursor = datetime.now().date()
+    cursor = local_today()
     for day in unique_days:
         if day == cursor:
             streak += 1
