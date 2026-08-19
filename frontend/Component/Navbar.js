@@ -65,7 +65,7 @@ const Navbar = () => {
    
 
   return (
-    <aside className="relative z-30 w-full min-w-0 shrink-0 overflow-visible bg-gradient-to-b from-pink-600 via-fuchsia-600 to-purple-600 text-white">
+    <aside className="relative z-30 w-full min-w-0 shrink-0 overflow-visible bg-gradient-to-b bg-pink-400 text-white">
       <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap items-center gap-4 px-6 py-4 sm:px-10">
       <div className="flex shrink-0 items-center gap-2 px-2">
         <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
@@ -97,7 +97,7 @@ const Navbar = () => {
             className={navClass('/promodro')}
           >
             <Timer size={17} />
-            Pomodoro
+            Focus Session
           </Link>
         </li>
        
@@ -137,7 +137,7 @@ const Navbar = () => {
         </li>}
         <li><Link href="/Notes" onClick={handleProtectedClick} className={navClass('/Notes')}><Timer size={17} />Notes</Link></li>
         <li><Link href="/Games" onClick={handleProtectedClick} className={navClass('/Games')}><Gamepad2 size={17} />Games</Link></li>
-        {blockedMessage && !email && <div className="rounded-2xl border border-white/25 bg-white/15 p-3"><p className="text-xs text-white">{blockedMessage}</p><Link href="/Login" onClick={() => setBlockedMessage('')} className="mt-2 inline-block rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-purple-700">Login</Link></div>}
+        {blockedMessage && !email && <div className="rounded-2xl border border-white/25 bg-white/15 p-3"><p className="text-xs text-white">{blockedMessage}</p><Link href="/Login" onClick={() => setBlockedMessage('')} className="mt-2 inline-block rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-pink-700">Login</Link></div>}
         {email && <li className="relative">
           <button type="button" onClick={() => setlogout((value) => !value)} className={navClass('profile')}>
             <UserCircle size={17} /> Profile
@@ -145,7 +145,7 @@ const Navbar = () => {
           {logout && <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-2xl border border-white/20 bg-slate-950/90 p-3 shadow-lg">
             <p className="truncate text-sm font-semibold text-white">{username || 'Student'}</p>
             <div className="mt-3 flex gap-2">
-              <button onClick={handleLogout} className="flex-1 rounded-lg bg-white px-2 py-1.5 text-xs font-bold text-purple-700"><LogOut size={13} className="mr-1 inline" />Logout</button>
+              <button onClick={handleLogout} className="flex-1 rounded-lg bg-white px-2 py-1.5 text-xs font-bold text-pink-700"><LogOut size={13} className="mr-1 inline" />Logout</button>
               <button onClick={() => setlogout(false)} className="flex-1 rounded-lg bg-white/15 px-2 py-1.5 text-xs text-white">Cancel</button>
             </div>
           </div>}

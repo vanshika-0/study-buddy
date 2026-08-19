@@ -30,11 +30,11 @@ export default function AuthGate({ children }) {
   if (isPublic || email) return children;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-pink-50 to-purple-50 p-6">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-pink-50 to-pink-50 p-6">
       <section className="w-full max-w-md rounded-3xl border border-pink-100 bg-white p-8 text-center shadow-xl shadow-pink-200">
         <h1 className="text-2xl font-bold text-gray-800">Login required</h1>
-        <p className="mt-3 text-sm text-purple-500">Please login first to access this page.</p>
-        <Link href="/Login" className="mt-6 inline-flex rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-3 font-semibold text-white transition hover:scale-[1.02]">Login</Link>
+        <p className="mt-3 text-sm text-pink-500">Please login first to access this page.</p>
+        <Link href="/Login" className="mt-6 inline-flex rounded-2xl bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-3 font-semibold text-white transition hover:scale-[1.02]">Login</Link>
       </section>
     </main>
   );

@@ -72,7 +72,7 @@ export default function PopThought({ onResume }) {
   };
   const progress = (bubbles.length / THOUGHTS.length) * 100;
   return (
-    <section className="rounded-3xl border border-pink-100 bg-gradient-to-br from-pink-50 to-purple-50 p-5 shadow-lg shadow-pink-100">
+    <section className="rounded-3xl border border-pink-100 bg-gradient-to-br from-pink-50 to-pink-50 p-5 shadow-lg shadow-pink-100">
       <div className="flex items-start justify-between">
         <div>
           <span className="text-3xl">🫧</span>
@@ -83,13 +83,13 @@ export default function PopThought({ onResume }) {
             Pop distracting thoughts and make room to breathe.
           </p>
         </div>
-        <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-purple-600">
+        <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-pink-600">
           {seconds}s
         </span>
       </div>
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-pink-100">
         <div
-          className="h-full bg-gradient-to-r from-pink-400 to-purple-500 transition-all"
+          className="h-full bg-gradient-to-r from-pink-400 to-pink-500 transition-all"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -99,7 +99,7 @@ export default function PopThought({ onResume }) {
             <button
               key={bubble.id}
               onClick={() => pop(bubble.id)}
-              className="thought-bubble absolute rounded-full bg-white/90 px-3 text-center text-xs font-semibold text-purple-700 shadow-lg shadow-pink-200 transition hover:scale-110 active:scale-75"
+              className="thought-bubble absolute rounded-full bg-white/90 px-3 text-center text-xs font-semibold text-pink-700 shadow-lg shadow-pink-200 transition hover:scale-110 active:scale-75"
               style={{
                 left: `${bubble.left}%`,
                 top: `${bubble.top}%`,
@@ -117,14 +117,14 @@ export default function PopThought({ onResume }) {
             <div className="mt-4 flex gap-2">
               <button
                 onClick={start}
-                className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-purple-600"
+                className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-pink-600"
               >
                 <RotateCcw size={13} className="mr-1 inline" />
                 Play Again
               </button>
               <button
                 onClick={onResume}
-                className="rounded-xl bg-purple-600 px-3 py-2 text-xs font-semibold text-white"
+                className="rounded-xl bg-pink-600 px-3 py-2 text-xs font-semibold text-white"
               >
                 Resume Studying
               </button>
@@ -133,7 +133,7 @@ export default function PopThought({ onResume }) {
         )}
       </div>
       {message && !done && (
-        <p className="mt-3 text-center text-sm font-medium text-purple-600 animate-pulse">
+        <p className="mt-3 text-center text-sm font-medium text-pink-600 animate-pulse">
           {message}
         </p>
       )}

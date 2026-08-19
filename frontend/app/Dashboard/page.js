@@ -256,13 +256,7 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-pink-50">
       <div className="mx-auto max-w-7xl px-6 py-8 sm:px-10 sm:py-10">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Your study activity at a glance.
-          </p>
-        </header>
-
+        
         <div className="flex flex-col gap-6">
           {/* Stat cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -296,7 +290,7 @@ const Page = () => {
                     {scheduleDate || "Today"} · {pendingTasks.length} pending
                   </p>
                 </div>
-                <span className="text-sm font-semibold text-purple-500 shrink-0">
+                <span className="text-sm font-semibold text-pink-500 shrink-0">
                   {completedTodayTasks.length}/{todayTasks.length} done
                 </span>
               </div>
@@ -320,7 +314,7 @@ const Page = () => {
                         type="button"
                         onClick={() => toggleTodayTask(task)}
                         aria-label={`Mark ${task.task} as complete`}
-                        className="w-5 h-5 shrink-0 rounded-full border-2 border-purple-300 bg-white"
+                        className="w-5 h-5 shrink-0 rounded-full border-2 border-pink-300 bg-white"
                       />
                       <span className="flex-1 min-w-0">
                         <span className="block font-semibold text-gray-800">
@@ -340,7 +334,7 @@ const Page = () => {
                       <button
                         type="button"
                         onClick={() => toggleRevisionTask(task)}
-                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${task.revisionRequired ? "bg-amber-200 text-amber-800" : "bg-white text-purple-600 border border-purple-100"}`}
+                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${task.revisionRequired ? "bg-amber-200 text-amber-800" : "bg-white text-pink-600 border border-pink-100"}`}
                       >
                         {task.revisionRequired
                           ? "Marked for revision"
@@ -440,7 +434,7 @@ const Page = () => {
 
           {/* Test Score Trend + Weekly Progress */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <section className={`${sectionBase} border-purple-100`}>
+            <section className={`${sectionBase} border-pink-100`}>
               <div className="flex items-center justify-between gap-2 mb-5">
                 <div>
                   <h2 className="text-lg font-bold text-gray-800">
@@ -453,7 +447,7 @@ const Page = () => {
                 {/* <select
                   value={testTopicFilter}
                   onChange={(e) => setTestTopicFilter(e.target.value)}
-                  className="max-w-24 rounded-lg border border-pink-200 bg-pink-50 px-2 py-1 text-[10px] text-purple-700"
+                  className="max-w-24 rounded-lg border border-pink-200 bg-pink-50 px-2 py-1 text-[10px] text-pink-700"
                 >
                   <option>All Tests</option>
                   {testTopics.map((topic) => (
@@ -563,7 +557,7 @@ const Page = () => {
               )}
             </section>
 
-            <section className={`${sectionBase} border-purple-100`}>
+            <section className={`${sectionBase} border-pink-100`}>
               <div className="mb-5">
                 <h2 className="text-lg font-bold text-gray-800">
                   Weekly progress
@@ -601,14 +595,14 @@ const Page = () => {
                           type="button"
                           title={label}
                           aria-label={label}
-                          className="w-full h-28 flex items-end justify-center focus:outline-none focus:ring-2 focus:ring-purple-400 rounded-md"
+                          className="w-full h-28 flex items-end justify-center focus:outline-none focus:ring-2 focus:ring-pink-400 rounded-md"
                         >
                           <span
-                            className="w-3 sm:w-4 rounded-t-md bg-gradient-to-t from-purple-300 to-purple-200 transition-all hover:from-purple-400 hover:to-purple-300"
+                            className="w-3 sm:w-4 rounded-t-md bg-gradient-to-t from-pink-300 to-pink-200 transition-all hover:from-pink-400 hover:to-pink-300"
                             style={{ height: `${height}%` }}
                           />
                         </button>
-                        <span className="text-[10px] font-medium text-purple-400">
+                        <span className="text-[10px] font-medium text-pink-400">
                           {day.day}
                         </span>
                       </div>

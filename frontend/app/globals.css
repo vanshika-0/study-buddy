@@ -36,16 +36,16 @@ body { background: var(--background); color: var(--foreground); transition: back
    each feature's layout. */
 html[data-theme="ocean"] .bg-pink-50, html[data-theme="meadow"] .bg-pink-50,
 html[data-mode="dark"] .bg-pink-50, html[data-mode="dark"] .bg-pink-100 { background-color: var(--app-soft) !important; }
-html[data-theme="ocean"] .bg-purple-50, html[data-theme="meadow"] .bg-purple-50,
-html[data-mode="dark"] .bg-purple-50, html[data-mode="dark"] .bg-indigo-950 { background-color: var(--app-accent-soft) !important; }
+html[data-theme="ocean"] .bg-pink-50, html[data-theme="meadow"] .bg-pink-50,
+html[data-mode="dark"] .bg-pink-50, html[data-mode="dark"] .bg-indigo-950 { background-color: var(--app-accent-soft) !important; }
 html[data-theme="ocean"] .bg-white, html[data-theme="meadow"] .bg-white,
 html[data-mode="dark"] .bg-white, html[data-mode="dark"] .bg-gray-50 { background-color: var(--app-surface) !important; }
 html[data-theme="ocean"] .border-pink-100, html[data-theme="meadow"] .border-pink-100,
 html[data-mode="dark"] .border-pink-100, html[data-mode="dark"] .border-pink-200 { border-color: var(--app-border) !important; }
 html[data-mode="dark"] .border-gray-100, html[data-mode="dark"] .border-violet-100,
 html[data-mode="dark"] .border-indigo-300\/30 { border-color: var(--app-border) !important; }
-html[data-theme="ocean"] .text-purple-500, html[data-theme="meadow"] .text-purple-500,
-html[data-mode="dark"] .text-purple-500, html[data-mode="dark"] .text-gray-500,
+html[data-theme="ocean"] .text-pink-500, html[data-theme="meadow"] .text-pink-500,
+html[data-mode="dark"] .text-pink-500, html[data-mode="dark"] .text-gray-500,
 html[data-mode="dark"] .text-gray-400 { color: var(--app-muted) !important; }
 html[data-mode="dark"] .text-gray-800, html[data-mode="dark"] .text-gray-700,
 html[data-mode="dark"] .text-gray-600 { color: var(--foreground) !important; }
@@ -56,10 +56,10 @@ html[data-mode="dark"] input, html[data-mode="dark"] textarea, html[data-mode="d
 html[data-mode="dark"] .bg-black\/30 { background-color: #100c1e !important; }
 html[data-mode="dark"] .study-chat { background: var(--app-surface) !important; border-color: var(--app-border); }
 html[data-mode="dark"] .study-chat .bg-pink-50\/60 { background-color: var(--app-soft) !important; }
-html[data-theme="ocean"] .bg-purple-600, html[data-theme="ocean"] .bg-pink-500 { background-color: var(--app-accent) !important; }
-html[data-theme="meadow"] .bg-purple-600, html[data-theme="meadow"] .bg-pink-500 { background-color: var(--app-accent) !important; }
+html[data-theme="ocean"] .bg-pink-600, html[data-theme="ocean"] .bg-pink-500 { background-color: var(--app-accent) !important; }
+html[data-theme="meadow"] .bg-pink-600, html[data-theme="meadow"] .bg-pink-500 { background-color: var(--app-accent) !important; }
 html[data-theme="ocean"] .from-pink-500, html[data-theme="meadow"] .from-pink-500 { --tw-gradient-from: var(--app-accent) var(--tw-gradient-from-position); }
-html[data-theme="ocean"] .to-purple-600, html[data-theme="meadow"] .to-purple-600 { --tw-gradient-to: var(--app-accent-strong) var(--tw-gradient-to-position); }
+html[data-theme="ocean"] .to-pink-600, html[data-theme="meadow"] .to-pink-600 { --tw-gradient-to: var(--app-accent-strong) var(--tw-gradient-to-position); }
 .chat-dot { display: inline-block; width: 5px; height: 5px; margin: 0 1px; border-radius: 999px; background: #8b5cf6; animation: chat-bounce 1s infinite ease-in-out; }
 .chat-dot:nth-child(2) { animation-delay: .15s; }.chat-dot:nth-child(3) { animation-delay: .3s; }
 @keyframes chat-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
@@ -77,6 +77,8 @@ html[data-theme="ocean"] .to-purple-600, html[data-theme="meadow"] .to-purple-60
 *, *::before, *::after { box-sizing: border-box; }
 html, body { max-width: 100%; overflow-x: hidden; }
 img, video, iframe { max-width: 100%; }
+body:has(.focus-session-page) .study-chat,
+body:has(.focus-session-page) .study-chat-trigger { display: none !important; }
 
 @media (max-width: 640px) {
   body { min-width: 320px; }

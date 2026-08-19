@@ -357,7 +357,7 @@ const Page = () => {
   // Still checking localStorage — avoid flashing wrong UI
   if (isLoggedIn === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-purple-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-pink-50">
         <p className="text-sm text-gray-400">Loading...</p>
       </div>
     );
@@ -366,7 +366,7 @@ const Page = () => {
   // Not logged in — hide the planner entirely
   if (isLoggedIn === false) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-pink-50 to-purple-50 px-4 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-pink-50 to-pink-50 px-4 text-center">
         <span className="text-4xl">🔒</span>
         <h2 className="text-lg font-bold text-gray-800">Please log in</h2>
         <p className="text-sm text-gray-400 max-w-xs">
@@ -374,7 +374,7 @@ const Page = () => {
         </p>
         <a
           href="/Login"
-          className="mt-2 rounded-full px-5 py-2.5 bg-gradient-to-br from-pink-500 to-purple-500 text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          className="mt-2 rounded-full px-5 py-2.5 bg-gradient-to-br from-pink-500 to-pink-500 text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Go to Login
         </a>
@@ -383,7 +383,7 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-6 py-10 px-4 bg-gradient-to-b from-pink-50 to-purple-50">
+    <div className="min-h-screen flex flex-col items-center gap-6 py-10 px-4 bg-gradient-to-b from-pink-50 to-pink-50">
       <div className="bg-white w-full max-w-xl p-3 flex items-center gap-2 rounded-full shadow-lg shadow-pink-200 border border-pink-100">
         <button
           onClick={toggleRecording}
@@ -408,7 +408,7 @@ const Page = () => {
         />
         <button
           onClick={handleGenerate}
-          className="rounded-full p-2.5 bg-gradient-to-br from-pink-500 to-purple-500 text-white hover:opacity-90 transition-opacity"
+          className="rounded-full p-2.5 bg-gradient-to-br from-pink-500 to-pink-500 text-white hover:opacity-90 transition-opacity"
         >
           <MoveRight size={18} />
         </button>
@@ -427,7 +427,7 @@ const Page = () => {
               {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
                 <div
                   key={d}
-                  className="text-center text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  className="text-center text-[11px] font-semibold text-pink-400 uppercase tracking-wider"
                 >
                   {d}
                 </div>
@@ -450,7 +450,7 @@ const Page = () => {
                         className={`aspect-square rounded-xl p-1.5 flex flex-col items-start text-left transition-all
                           ${
                             isSelected
-                              ? "bg-gradient-to-br from-pink-400 to-purple-400 text-white shadow-md scale-[1.03]"
+                              ? "bg-gradient-to-br from-pink-400 to-pink-400 text-white shadow-md scale-[1.03]"
                               : hasTasks
                                 ? "bg-pink-50 border border-pink-200 hover:bg-pink-100 cursor-pointer"
                                 : "bg-gray-50 border border-gray-100 hover:bg-gray-100 cursor-pointer"
@@ -477,7 +477,7 @@ const Page = () => {
                           ))}
                           {tasks.length > 2 && (
                             <span
-                              className={`text-[9px] ${isSelected ? "text-white/80" : "text-purple-400"}`}
+                              className={`text-[9px] ${isSelected ? "text-white/80" : "text-pink-400"}`}
                             >
                               +{tasks.length - 2} more
                             </span>
@@ -500,7 +500,7 @@ const Page = () => {
                     weekday: "long",
                   })}
                 </h3>
-                <p className="text-xs text-purple-400 mb-4">
+                <p className="text-xs text-pink-400 mb-4">
                   {new Date(selectedDate).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -622,14 +622,14 @@ const Page = () => {
                                 className={`rounded-lg px-2 py-1 text-[10px] font-semibold transition-colors ${
                                   t.revisionRequired
                                     ? "bg-amber-200 text-amber-800 hover:bg-amber-300"
-                                    : "bg-white text-purple-500 hover:bg-purple-100"
+                                    : "bg-white text-pink-500 hover:bg-pink-100"
                                 }`}
                               >
                                 {t.revisionRequired ? "Marked for Revision" : "Mark for Revision"}
                               </button>
                               <button
                                 onClick={() => startEdit(t.originalIndex, t)}
-                                className="p-1 rounded-full text-purple-400 hover:bg-purple-100"
+                                className="p-1 rounded-full text-pink-400 hover:bg-pink-100"
                               >
                                 <Pencil size={14} />
                               </button>
@@ -650,10 +650,10 @@ const Page = () => {
 
                   {/* Add task form / button — works for empty days too */}
                   {isAddingTask ? (
-                    <div className="rounded-xl bg-purple-50 border border-purple-100 p-3">
+                    <div className="rounded-xl bg-pink-50 border border-pink-100 p-3">
                       <div className="flex flex-col gap-2">
                         <input
-                          className="text-sm font-semibold text-gray-800 bg-white rounded px-2 py-1 border border-purple-200 focus:outline-none"
+                          className="text-sm font-semibold text-gray-800 bg-white rounded px-2 py-1 border border-pink-200 focus:outline-none"
                           value={newTaskForm.task}
                           onChange={(e) =>
                             setNewTaskForm((f) => ({
@@ -665,7 +665,7 @@ const Page = () => {
                           autoFocus
                         />
                         <textarea
-                          className="text-xs text-gray-600 bg-white rounded px-2 py-1 border border-purple-200 focus:outline-none resize-none"
+                          className="text-xs text-gray-600 bg-white rounded px-2 py-1 border border-pink-200 focus:outline-none resize-none"
                           value={newTaskForm.description}
                           onChange={(e) =>
                             setNewTaskForm((f) => ({
@@ -679,7 +679,7 @@ const Page = () => {
                         <div className="flex gap-2">
                           <input
                             type="time"
-                            className="text-xs bg-white rounded px-2 py-1 border border-purple-200 focus:outline-none flex-1"
+                            className="text-xs bg-white rounded px-2 py-1 border border-pink-200 focus:outline-none flex-1"
                             value={newTaskForm.start_time}
                             onChange={(e) =>
                               setNewTaskForm((f) => ({
@@ -690,7 +690,7 @@ const Page = () => {
                           />
                           <input
                             type="time"
-                            className="text-xs bg-white rounded px-2 py-1 border border-purple-200 focus:outline-none flex-1"
+                            className="text-xs bg-white rounded px-2 py-1 border border-pink-200 focus:outline-none flex-1"
                             value={newTaskForm.end_time}
                             onChange={(e) =>
                               setNewTaskForm((f) => ({
@@ -720,7 +720,7 @@ const Page = () => {
                   ) : (
                     <button
                       onClick={openAddTask}
-                      className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-purple-200 text-purple-400 text-sm font-medium py-2.5 hover:bg-purple-50 transition-colors"
+                      className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-pink-200 text-pink-400 text-sm font-medium py-2.5 hover:bg-pink-50 transition-colors"
                     >
                       <Plus size={14} /> Add task
                     </button>

@@ -261,9 +261,9 @@ export default function VideoPlayerProvider({ children }) {
     <VideoPlayerContext.Provider value={contextValue}>
       {children}
       {videoUrl && (
-        <aside className={`fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-purple-200 bg-white shadow-2xl shadow-purple-300/40 ${isMinimized ? 'w-auto' : ''}`}>
+        <aside className={`fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-2xl shadow-pink-300/40 ${isMinimized ? 'w-auto' : ''}`}>
           {isMinimized ? (
-            <button type="button" onClick={() => setIsMinimized(false)} className="px-4 py-3 text-sm font-semibold text-purple-700">▶ Continue: {videoName}</button>
+            <button type="button" onClick={() => setIsMinimized(false)} className="px-4 py-3 text-sm font-semibold text-pink-700">▶ Continue: {videoName}</button>
           ) : (
             <>
               <div className="flex items-center gap-2 px-3 py-2">
@@ -278,7 +278,7 @@ export default function VideoPlayerProvider({ children }) {
                 }
                 savePlaybackState(videoRef.current?.currentTime || 0, false)
               }} className="block w-full bg-gray-950" />
-              <a href={videoUrl} download={videoName || 'study-video.webm'} className="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-purple-700 hover:text-purple-900"><Download size={14} /> Download video</a>
+              <a href={videoUrl} download={videoName || 'study-video.webm'} className="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-pink-700 hover:text-pink-900"><Download size={14} /> Download video</a>
             </>
           )}
         </aside>

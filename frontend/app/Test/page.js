@@ -90,16 +90,16 @@ export default function TestPage() {
   }
   if (result)
     return (
-      <main className="min-h-screen bg-gradient-to-b from-pink-50 to-purple-50 p-6">
+      <main className="min-h-screen bg-gradient-to-b from-pink-50 to-pink-50 p-6">
         <section className="mx-auto mt-16 max-w-xl rounded-3xl border border-pink-100 bg-white p-10 text-center shadow-xl shadow-pink-200">
-          <p className="text-xs font-bold uppercase tracking-wider text-purple-500">
+          <p className="text-xs font-bold uppercase tracking-wider text-pink-400">
             Test complete
           </p>
           <h1 className="mt-3 text-3xl font-bold text-gray-800">Final score</h1>
-          <p className="mt-4 text-6xl font-bold text-purple-600">
+          <p className="mt-4 text-6xl font-bold text-pink-400">
             {result.score}/{questions.length}
           </p>
-          <p className="mt-2 text-purple-500">{result.accuracy}%</p>
+          <p className="mt-2 text-pink-500">{result.accuracy}%</p>
           <button
             onClick={() => {
               setQuestions(null);
@@ -107,7 +107,7 @@ export default function TestPage() {
               setAnswers({});
               setError("");
             }}
-            className="mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-3 font-semibold text-white"
+            className="mt-8 rounded-2xl bg-gradient-to-r bg-pink-400 px-6 py-3 font-semibold text-white"
           >
             <RotateCcw size={16} className="mr-1 inline" />
             New test
@@ -117,17 +117,17 @@ export default function TestPage() {
     );
   if (!questions)
     return (
-      <main className="min-h-screen bg-gradient-to-b from-pink-50 to-purple-50 p-4">
+      <main className="min-h-screen bg-gradient-to-b from-pink-50 to-pink-50 p-4">
         <form
           onSubmit={generate}
           className="mx-auto mt-8 w-full max-w-lg rounded-3xl border border-pink-100 bg-white p-8 shadow-xl shadow-pink-200"
         >
           <div className="text-center">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 text-white">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br bg-pink-400 text-white">
               <ClipboardList />
             </span>
             <h1 className="mt-3 text-2xl font-bold">Create a Test</h1>
-            <p className="text-sm text-purple-400">
+            <p className="text-sm text-pink-400">
               Choose how you want to demonstrate understanding.
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function TestPage() {
                 type="button"
                 key={value}
                 onClick={() => setQuestionType(value)}
-                className={`rounded-xl border p-3 text-left text-sm ${questionType === value ? "border-transparent bg-gradient-to-r from-pink-500 to-purple-600 text-white" : "border-pink-200 bg-pink-50 text-purple-600"}`}
+                className={`rounded-xl border p-3 text-left text-sm ${questionType === value ? "border-transparent bg-gradient-to-r bg-pink-400 text-white" : "border-pink-200 bg-pink-50 text-pink-600"}`}
               >
                 <b>{value}</b>
                 <span className="ml-2 text-xs opacity-80">{label}</span>
@@ -178,7 +178,7 @@ export default function TestPage() {
                     type="button"
                     key={x}
                     onClick={() => setDifficulty(x)}
-                    className={`flex-1 rounded-xl py-2 text-xs font-bold ${difficulty === x ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white" : "text-pink-500"}`}
+                    className={`flex-1 rounded-xl py-2 text-xs font-bold ${difficulty === x ? "bg-gradient-to-r bg-pink-400 text-white" : "text-pink-500"}`}
                   >
                     {x}
                   </button>
@@ -189,7 +189,7 @@ export default function TestPage() {
           {error && <p className="mt-4 text-sm text-rose-600">{error}</p>}
           <button
             disabled={loading}
-            className="mt-6 w-full rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 p-4 font-semibold text-white disabled:opacity-60"
+            className="mt-6 w-full rounded-2xl bg-gradient-to-r bg-pink-400 p-4 font-semibold text-white disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -209,9 +209,9 @@ export default function TestPage() {
       current.questionType !== "MCQ" &&
       !Array.isArray(current.options));
   return (
-    <main className="min-h-screen bg-gradient-to-b from-pink-50 to-purple-50 p-6">
+    <main className="min-h-screen bg-gradient-to-b from-pink-50 to-pink-50 p-6">
       <div className="mx-auto max-w-2xl">
-        <div className="flex justify-between text-sm font-semibold text-purple-500">
+        <div className="flex justify-between text-sm font-semibold text-pink-500">
           <span>
             Question {index + 1} of {questions.length}
           </span>
@@ -219,12 +219,12 @@ export default function TestPage() {
         </div>
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-pink-100">
           <div
-            className="h-full bg-gradient-to-r from-pink-500 to-purple-600"
+            className="h-full bg-gradient-to-r bg-pink-400"
             style={{ width: `${((index + 1) / questions.length) * 100}%` }}
           />
         </div>
         <section className="mt-5 rounded-3xl border border-pink-100 bg-white p-7 shadow-xl shadow-pink-200">
-          <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-600">
+          <span className="rounded-full bg-pink-50 px-3 py-1 text-xs font-semibold text-pink-600">
             {current.questionType || questionType}
           </span>
           <h1 className="mt-5 text-lg font-bold">{current.question}</h1>
@@ -246,7 +246,7 @@ export default function TestPage() {
                   onClick={() =>
                     setAnswers((old) => ({ ...old, [index]: optionIndex }))
                   }
-                  className={`w-full rounded-2xl border px-4 py-3 text-left ${answers[index] === optionIndex ? "border-transparent bg-gradient-to-r from-pink-500 to-purple-600 text-white" : "border-pink-200 bg-pink-50"}`}
+                  className={`w-full rounded-2xl border px-4 py-3 text-left ${answers[index] === optionIndex ? "border-transparent bg-gradient-to-r bg-pink-400 text-white" : "border-pink-200 bg-pink-50"}`}
                 >
                   {option}
                 </button>
@@ -266,7 +266,7 @@ export default function TestPage() {
           {index === questions.length - 1 ? (
             <button
               onClick={submit}
-              className="rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 px-5 py-2 font-semibold text-white"
+              className="rounded-2xl bg-gradient-to-r bg-pink-400 px-5 py-2 font-semibold text-white"
             >
               Submit Test
             </button>

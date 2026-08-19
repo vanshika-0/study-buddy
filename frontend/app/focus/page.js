@@ -76,7 +76,7 @@ const themeImages = {
 };
 const ambientForEnvironment = { Rain: "Rain", Forest: "Forest", Ocean: "Ocean", Fire: "Fireplace", Night: "Night", Cafe: "Cafe", Beach: "Ocean", Lake: "Ocean", Mountain: "Wind", Meadow: "Wind", Garden: "Wind", Cloud: "Wind", Snow: "Wind" };
 const worldVisuals = {
-  "Focus Bloom": "linear-gradient(180deg,#cf00c7 0%,#a812f0 100%)",
+  "Focus Bloom": "radial-gradient(circle at 25% 28%, rgba(254,240,138,.65), transparent 18%), linear-gradient(145deg,#831843,#ec4899 55%,#9d174d)",
   "Lofi Clouds": "#7dd3fc",
   "Rainy Window": "#164e63",
   "Cozy CafÃ©": "#78350f",
@@ -131,7 +131,7 @@ const audioOptions = [
   ["White noise", "✨", "Soft white noise"],
 ];
 const readFocusPreference = (key, fallback) => typeof window === "undefined" ? fallback : localStorage.getItem(key) || fallback;
-// Focus Session always opens with the requested magenta-to-purple default.
+// Focus Session opens with the requested soft pink default.
 // Other themes remain available after opening and can still be selected for
 // the current session.
 const initialWorldTheme = "Focus Bloom";
@@ -433,6 +433,7 @@ export default function FocusPage() {
   const bg = image
     ? `linear-gradient(rgba(0,0,0,${overlay / 100}),rgba(0,0,0,${overlay / 100})),url(${image})`
     : backgroundOverride || sceneVisuals[scene] || sceneVisuals.Rain;
+  const isFocusBloom = activeWorldTheme === initialWorldTheme && !image;
   const activeTheme = themes[theme];
   const saveQuote = () => {
     const value = quoteDraft.trim();
@@ -444,16 +445,16 @@ export default function FocusPage() {
 
   return (
     <div
-      className="fixed inset-0 z-50 h-[100dvh] w-full overflow-y-auto bg-black text-white selection:bg-white/30"
+      className="focus-session-page fixed inset-0 z-50 h-[100dvh] w-full overflow-y-auto bg-black text-white selection:bg-white/30"
       style={{
-        backgroundImage: bg,
+        background: bg,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        filter: `brightness(${brightness}%)`,
+        filter: isFocusBloom ? "none" : `brightness(${brightness}%)`,
       }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,.12),transparent_42%),linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.3))]" style={{ backdropFilter: `blur(${blur}px)` }} />
+      <div className={`pointer-events-none absolute inset-0 ${isFocusBloom ? "hidden" : "bg-[radial-gradient(circle_at_center,rgba(255,255,255,.12),transparent_42%),linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.3))]"}`} style={{ backdropFilter: isFocusBloom ? "none" : `blur(${blur}px)` }} />
       <header className="relative flex items-center justify-between px-5 py-6 sm:px-10 sm:py-8">
         <Link
           href="/Dashboard"
@@ -567,13 +568,13 @@ export default function FocusPage() {
       </main>
 
       {panel && (
-        <aside className="fixed bottom-4 right-4 top-20 z-10 w-[min(27rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[2rem] border-2 border-pink-200/80 bg-gradient-to-b from-pink-50/95 via-fuchsia-50/90 to-purple-50/95 p-5 text-left text-gray-700 shadow-2xl shadow-fuchsia-300/30 backdrop-blur-2xl sm:right-6 sm:w-[min(27rem,calc(100vw-3rem))]">
+        <aside className="fixed bottom-4 right-4 top-20 z-10 w-[min(27rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[2rem] border-2 border-pink-200/80 bg-gradient-to-b from-pink-50/95 via-pink-50/90 to-pink-50/95 p-5 text-left text-gray-700 shadow-2xl shadow-pink-300/30 backdrop-blur-2xl sm:right-6 sm:w-[min(27rem,calc(100vw-3rem))]">
           <div className="mb-5 flex items-start justify-between">
             <div>
-              <b className="flex items-center gap-1.5 text-base font-bold text-fuchsia-700">
+              <b className="flex items-center gap-1.5 text-base font-bold text-pink-700">
                 <Sparkles size={15} className="text-pink-400" /> Focus settings
               </b>
-              <p className="mt-0.5 text-xs text-fuchsia-400">
+              <p className="mt-0.5 text-xs text-pink-400">
                 Personal to this session only
               </p>
             </div>
@@ -586,7 +587,7 @@ export default function FocusPage() {
             </button>
           </div>
 
-          <label className="flex items-center gap-3 rounded-2xl border border-pink-100 bg-white/70 p-3 text-sm text-fuchsia-700">
+          <label className="flex items-center gap-3 rounded-2xl border border-pink-100 bg-white/70 p-3 text-sm text-pink-700">
             Minutes
             <input
               type="number"
@@ -604,7 +605,7 @@ export default function FocusPage() {
                   persistTimer({ nextSeconds: v * 60, nextMinutes: v, nextRunning: false });
                 }
               }}
-              className="ml-auto w-20 rounded-full border border-pink-200 bg-white p-2 text-center text-fuchsia-700 outline-none focus:ring-2 focus:ring-pink-300"
+              className="ml-auto w-20 rounded-full border border-pink-200 bg-white p-2 text-center text-pink-700 outline-none focus:ring-2 focus:ring-pink-300"
             />
           </label>
 
@@ -630,10 +631,10 @@ export default function FocusPage() {
           <section className="mt-5 rounded-3xl border border-pink-200/80 bg-white/45 p-3 shadow-sm">
           <div className="mb-3 flex items-center justify-between gap-3 px-1">
             <div>
-              <p className="text-sm font-bold text-fuchsia-700">Scenes &amp; Ambient Worlds</p>
-              <p className="text-[11px] text-fuchsia-400">Choose a visual atmosphere for your focus space.</p>
+              <p className="text-sm font-bold text-pink-700">Scenes &amp; Ambient Worlds</p>
+              <p className="text-[11px] text-pink-400">Choose a visual atmosphere for your focus space.</p>
             </div>
-            <span className="rounded-full bg-purple-100 px-2.5 py-1 text-[10px] font-semibold text-purple-600">Visuals</span>
+            <span className="rounded-full bg-pink-100 px-2.5 py-1 text-[10px] font-semibold text-pink-600">Visuals</span>
           </div>
           <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-pink-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-pink-600">
             🌸 Scene
@@ -654,7 +655,7 @@ export default function FocusPage() {
           </div>
 
           <div className="mt-4 border-t border-pink-200/80 pt-4">
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-purple-600">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-pink-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-pink-600">
               ðŸŒ™ Ambient worlds
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -672,7 +673,7 @@ export default function FocusPage() {
                   }}
                 >
                   <span className="block aspect-[1.7/1]" />
-                  <span className="block bg-white/85 px-2 py-1.5 font-semibold text-fuchsia-700 backdrop-blur-sm">{name}</span>
+                  <span className="block bg-white/85 px-2 py-1.5 font-semibold text-pink-700 backdrop-blur-sm">{name}</span>
                 </button>
               ))}
             </div>
@@ -694,7 +695,7 @@ export default function FocusPage() {
           </button>
 
           {image && (
-            <div className="mt-3 space-y-3 rounded-2xl border border-pink-100 bg-white/70 p-3 text-xs text-fuchsia-600">
+            <div className="mt-3 space-y-3 rounded-2xl border border-pink-100 bg-white/70 p-3 text-xs text-pink-600">
               {[
                 ["Blur", blur, 20, setBlur],
                 ["Overlay", overlay, 85, setOverlay],
@@ -715,7 +716,7 @@ export default function FocusPage() {
             </div>
           )}
 
-          <p className="mb-2 mt-5 inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-purple-600">
+          <p className="mb-2 mt-5 inline-flex items-center gap-1.5 rounded-full bg-pink-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-pink-600">
             💫 Timer theme
           </p>
           <div className="grid grid-cols-2 gap-2">
@@ -723,18 +724,18 @@ export default function FocusPage() {
               <button
                 key={t}
                 onClick={() => { setTheme(t); setMediaOn(false); }}
-                className={`rounded-full border-2 p-2 text-xs font-semibold transition ${theme === t ? "border-pink-400 bg-pink-400 text-white shadow-sm" : "border-pink-200 bg-white/70 text-fuchsia-600 hover:bg-white"}`}
+                className={`rounded-full border-2 p-2 text-xs font-semibold transition ${theme === t ? "border-pink-400 bg-pink-400 text-white shadow-sm" : "border-pink-200 bg-white/70 text-pink-600 hover:bg-white"}`}
               >
                 {t}
               </button>
             ))}
           </div>
 
-          <div className="mt-5 flex items-center justify-between rounded-2xl border border-pink-100 bg-white/70 p-3 text-sm text-fuchsia-700">
+          <div className="mt-5 flex items-center justify-between rounded-2xl border border-pink-100 bg-white/70 p-3 text-sm text-pink-700">
             Quotes
             <button
               onClick={() => setQuotesOn(!quotesOn)}
-              className={`h-6 w-11 rounded-full transition ${quotesOn ? "bg-gradient-to-r from-pink-400 to-purple-400" : "bg-pink-100"}`}
+              className={`h-6 w-11 rounded-full transition ${quotesOn ? "bg-gradient-to-r from-pink-400 to-pink-400" : "bg-pink-100"}`}
             >
               <span
                 className={`block h-5 w-5 rounded-full bg-white shadow transition-transform ${quotesOn ? "translate-x-5" : "translate-x-0.5"}`}
@@ -745,14 +746,14 @@ export default function FocusPage() {
             <select
               value={quoteWhen}
               onChange={(e) => setQuoteWhen(e.target.value)}
-              className="mt-2 w-full rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-fuchsia-700 outline-none"
+              className="mt-2 w-full rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-pink-700 outline-none"
             >
               <option value="always">Always</option>
               <option value="start">Only while running</option>
             </select>
           )}
 
-          <p className="mb-2 mt-5 inline-flex items-center gap-1.5 rounded-full bg-fuchsia-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-fuchsia-600">
+          <p className="mb-2 mt-5 inline-flex items-center gap-1.5 rounded-full bg-pink-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-pink-600">
             🎧 Ambient / media
           </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -764,8 +765,8 @@ export default function FocusPage() {
                 className={`rounded-2xl border-2 p-2 text-left transition ${sound === value ? "border-pink-400 bg-pink-100 shadow-sm" : "border-pink-100 bg-white/70 hover:bg-white"}`}
               >
                 <span className="text-lg">{icon}</span>
-                <span className="mt-1 block text-[11px] font-semibold text-fuchsia-700">{value}</span>
-                <span className="block truncate text-[10px] text-fuchsia-400">{label}</span>
+                <span className="mt-1 block text-[11px] font-semibold text-pink-700">{value}</span>
+                <span className="block truncate text-[10px] text-pink-400">{label}</span>
               </button>
             ))}
           </div>
@@ -779,7 +780,7 @@ export default function FocusPage() {
             <select
               value={sound}
               onChange={(e) => chooseAudio(e.target.value)}
-              className="flex-1 rounded-full border border-pink-200 bg-white p-2 text-xs text-fuchsia-700 outline-none"
+              className="flex-1 rounded-full border border-pink-200 bg-white p-2 text-xs text-pink-700 outline-none"
             >
               <option>Rain</option>
               <option>Cafe</option>
@@ -801,7 +802,7 @@ export default function FocusPage() {
             value={youtube}
             onChange={(e) => setYoutube(e.target.value)}
             placeholder="Paste YouTube URL (official embed)"
-            className="mt-3 w-full rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-fuchsia-700 outline-none placeholder:text-fuchsia-300"
+            className="mt-3 w-full rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-pink-700 outline-none placeholder:text-pink-300"
           />
           {youtubeId && (
             <iframe
@@ -820,11 +821,11 @@ export default function FocusPage() {
               value={spotify}
               onChange={(e) => setSpotify(e.target.value)}
               placeholder="Spotify track/playlist URL"
-              className="min-w-0 flex-1 rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-fuchsia-700 outline-none placeholder:text-fuchsia-300"
+              className="min-w-0 flex-1 rounded-full border border-pink-200 bg-white/80 p-2 text-xs text-pink-700 outline-none placeholder:text-pink-300"
             />
             <button
               onClick={() => setSpotifyConnected(!spotifyConnected)}
-              className={`shrink-0 rounded-full px-3 text-xs font-bold transition ${spotifyConnected ? "bg-gray-200 text-gray-600" : "bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm"}`}
+              className={`shrink-0 rounded-full px-3 text-xs font-bold transition ${spotifyConnected ? "bg-gray-200 text-gray-600" : "bg-gradient-to-r from-pink-400 to-pink-400 text-white shadow-sm"}`}
             >
               {spotifyConnected ? "Disconnect" : "Connect"}
             </button>
@@ -842,7 +843,7 @@ export default function FocusPage() {
           )}
 
           {false && <div className="mt-5 border-t-2 border-dashed border-pink-200 pt-4">
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-purple-600">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-pink-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-pink-600">
               🌙 Ambient worlds
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -860,7 +861,7 @@ export default function FocusPage() {
                   }}
                 >
                   <span className="block aspect-[1.7/1]" />
-                  <span className="block bg-white/85 px-2 py-1.5 font-semibold text-fuchsia-700 backdrop-blur-sm">
+                  <span className="block bg-white/85 px-2 py-1.5 font-semibold text-pink-700 backdrop-blur-sm">
                     {name}
                   </span>
                 </button>
