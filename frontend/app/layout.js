@@ -1,12 +1,8 @@
-import { Geist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Component/Navbar";
+import AuthGate from "@/Component/AuthGate";
 import VideoPlayerProvider from "@/Component/VideoPlayerProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import StudyBuddyChat from "@/Component/StudyBuddyChat";
 
 export const metadata = {
   title: "Create Next App",
@@ -15,13 +11,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         <VideoPlayerProvider>
-          <div style={{ display: "flex", minHeight: "100vh" }}>
-            <Navbar />
-            <main style={{ flex: 1 }}>{children}</main>
+          <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            <header style={{ display: "contents" }}>
+              <Navbar />
+            </header>
+            <main style={{ flex: 1 }}><AuthGate>{children}</AuthGate></main>
           </div>
+          <StudyBuddyChat />
         </VideoPlayerProvider>
       </body>
     </html>

@@ -2,41 +2,45 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState,useEffect } from 'react'
 import {
-  LayoutGrid,
   CalendarDays,
   Timer,
   BookOpen,
   ClipboardList,
-  BarChart3,
   Settings,
   Brain,
+  UserCircle,
+  LogOut,
+  Gamepad2,
 } from 'lucide-react'
 
 // next.js mai routing with the help of link hoti hai
 const Navbar = () => {
 
- 
+   const pathname = usePathname();
    const [username, setusername] = useState('');
+   const [email, setEmail] = useState('');
    const [logout, setlogout] = useState(false);
+   const [blockedMessage, setBlockedMessage] = useState('');
 
    
    
 
    useEffect(() => {
-     const storedemail=localStorage.getItem("email");
-    const storedusername=localStorage.getItem("username");
-     if(storedusername){
-      console.log("username",storedusername);
-      setusername(storedusername);
-     }
+     const syncAuth = () => { setusername(localStorage.getItem('username') || ''); setEmail(localStorage.getItem('email') || '') }
+     syncAuth(); window.addEventListener('storage', syncAuth); window.addEventListener('auth-changed', syncAuth)
+     return () => { window.removeEventListener('storage', syncAuth); window.removeEventListener('auth-changed', syncAuth) }
    }, [])
 
    function handleLogout(){
+    const storedemail=localStorage.getItem("email");
+    const storedusername=localStorage.getItem("username");
     if(storedusername && storedemail){
     localStorage.removeItem("username");
     localStorage.removeItem("email");
+    window.dispatchEvent(new Event('auth-changed'));
     setlogout(false);
     }
     else{
@@ -46,33 +50,42 @@ const Navbar = () => {
     return;
 
    }
+
+   function handleProtectedClick(event) {
+    if (!email) {
+      event.preventDefault();
+      setBlockedMessage('Please login first to access this page.');
+    }
+   }
+
+   function navClass(href, settings = false) {
+    const active = settings ? pathname === '/' : pathname === href;
+    return `flex items-center gap-3 px-3 py-2.5 rounded-xl ${active ? 'bg-white/25 text-white font-semibold' : 'text-white/80 hover:bg-white/10 font-medium'} text-sm transition-colors`;
+   }
    
 
   return (
-    <div className="bg-gradient-to-b from-pink-600 to-purple-600 w-[220px] min-w-[220px] h-screen p-4 flex flex-col text-white">
-      <div className="flex items-center gap-2 px-2 mb-7">
+    <aside className="relative z-30 w-full min-w-0 shrink-0 overflow-visible bg-gradient-to-b from-pink-600 via-fuchsia-600 to-purple-600 text-white">
+      <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap items-center gap-4 px-6 py-4 sm:px-10">
+      <div className="flex shrink-0 items-center gap-2 px-2">
         <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
           <Brain size={16} />
         </div>
-        <h1 className="font-bold text-[15px]">AI Study Planner</h1>
+         <Link
+            href="/Dashboard" 
+            className='font-bold text-[15px]'
+          >
+           AI Study Planner
+          </Link>
         
+         
       </div>
 
-      <ul className="flex flex-col gap-1">
-        <p>{username}</p>
+      <ul className="flex min-w-0 flex-1 flex-row flex-wrap items-center justify-end gap-1">
         <li>
           <Link
-            href="/Dashboard"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/25 text-white font-semibold text-sm"
-          >
-            <LayoutGrid size={17} />
-            Dashboard
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/planner"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
+            href="/planner" onClick={handleProtectedClick}
+            className={navClass('/planner')}
           >
             <CalendarDays size={17} />
             Study Plan
@@ -80,99 +93,68 @@ const Navbar = () => {
         </li>
         <li>
           <Link
-            href="/promodro"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
+            href="/promodro" onClick={handleProtectedClick}
+            className={navClass('/promodro')}
           >
             <Timer size={17} />
             Pomodoro
           </Link>
         </li>
+       
         <li>
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
-          >
-            <BookOpen size={17} />
-            Topics
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/Test"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
-          >
+          <Link href="/Test" onClick={handleProtectedClick} className={navClass('/Test')}>
             <ClipboardList size={17} />
             Test
           </Link>
         </li>
         <li>
           <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
-          >
-            <BarChart3 size={17} />
-            Analytics
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white font-semibold text-sm hover:bg-white/10 transition-colors"
+            href="/" onClick={handleProtectedClick}
+            className={navClass('/', true)}
           >
             <Settings size={17} />
             Settings
           </Link>
         </li>
-         <li>
+         {!email && <li>
           <Link
             href="/Login"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
+            className={navClass('/Login')}
           >
             <Timer size={17} />
             Login
           </Link>
-        </li>
-         <li>
+        </li>}
+         {!email && <li>
           <Link
             href="/Signup"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
+            className={navClass('/Signup')}
           >
             <Timer size={17} />
             Signup
           </Link>
 
-          <Link
-            href="/Notes"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors"
-          >
-            <Timer size={17} />
-            Notes
-          </Link>
-        </li>
-        
-          <p onClick={(e)=>{
-            console.log("logout",logout);
-            setlogout(true);
-            console.log("logout",logout);
-          }} className='flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/10 font-medium text-sm transition-colors'>Logout</p>
-        
-           {logout && (
-            <div className='w-[100%] p-3  rounded-2xl bg-amber-800'>
-              <p className='text-[82%]'>Are you sure you want to Logout?</p>
-              <div className='flex gap-1'>
-              <button onClick={handleLogout} className="w-50 p-1 bg-amber-400 border rounded-2xl mt-2 text-[82%]">Yes</button>
-              <button onClick={(e)=>{setlogout(false)}} className="w-50 p-1 bg-amber-400 border rounded-2xl mt-2 text-[82%]">No</button>
-              </div>
+        </li>}
+        <li><Link href="/Notes" onClick={handleProtectedClick} className={navClass('/Notes')}><Timer size={17} />Notes</Link></li>
+        <li><Link href="/Games" onClick={handleProtectedClick} className={navClass('/Games')}><Gamepad2 size={17} />Games</Link></li>
+        {blockedMessage && !email && <div className="rounded-2xl border border-white/25 bg-white/15 p-3"><p className="text-xs text-white">{blockedMessage}</p><Link href="/Login" onClick={() => setBlockedMessage('')} className="mt-2 inline-block rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-purple-700">Login</Link></div>}
+        {email && <li className="relative">
+          <button type="button" onClick={() => setlogout((value) => !value)} className={navClass('profile')}>
+            <UserCircle size={17} /> Profile
+          </button>
+          {logout && <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-2xl border border-white/20 bg-slate-950/90 p-3 shadow-lg">
+            <p className="truncate text-sm font-semibold text-white">{username || 'Student'}</p>
+            <div className="mt-3 flex gap-2">
+              <button onClick={handleLogout} className="flex-1 rounded-lg bg-white px-2 py-1.5 text-xs font-bold text-purple-700"><LogOut size={13} className="mr-1 inline" />Logout</button>
+              <button onClick={() => setlogout(false)} className="flex-1 rounded-lg bg-white/15 px-2 py-1.5 text-xs text-white">Cancel</button>
             </div>
-           )}
-      </ul>
-
-      <div className="mt-auto bg-white/15 rounded-xl px-3 py-3 text-center">
-        <div className="text-[11px] tracking-wide font-semibold opacity-85">
-          OVERALL SCORE
-        </div>
+          </div>}
+        </li>}
+       </ul>
       </div>
-    </div>
+
+     
+    </aside>
   )
 }
 

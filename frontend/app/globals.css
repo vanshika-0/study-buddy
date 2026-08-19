@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --app-surface: #ffffff;
+  --app-soft: #fff1f8;
+  --app-accent-soft: #f5f3ff;
+  --app-border: #fce7f3;
+  --app-muted: #6b7280;
+  --app-accent: #7c3aed;
+  --app-accent-strong: #6d28d9;
 }
 
 @theme inline {
@@ -12,15 +19,54 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html[data-theme="ocean"] { --background: #effaff; --foreground: #12324a; --app-surface: #ffffff; --app-soft: #ecfeff; --app-accent-soft: #eff6ff; --app-border: #bae6fd; --app-muted: #527085; --app-accent: #0369a1; --app-accent-strong: #075985; }
+html[data-theme="meadow"] { --background: #f2fbf5; --foreground: #183b2a; --app-surface: #ffffff; --app-soft: #ecfdf5; --app-accent-soft: #f0fdf4; --app-border: #bbf7d0; --app-muted: #557260; --app-accent: #047857; --app-accent-strong: #065f46; }
+html[data-mode="dark"] { --background: #171329; --foreground: #f8f7ff; --app-surface: #241e3b; --app-soft: #2b2448; --app-accent-soft: #302753; --app-border: #493d6b; --app-muted: #b7add2; --app-accent: #a78bfa; --app-accent-strong: #8b5cf6; }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body { background: var(--background); color: var(--foreground); transition: background-color .2s ease, color .2s ease; }
+
+/* Existing pages use Tailwind's pink/purple utility palette. These shared
+   overrides let the persisted app theme reach those pages without rewriting
+   each feature's layout. */
+html[data-theme="ocean"] .bg-pink-50, html[data-theme="meadow"] .bg-pink-50,
+html[data-mode="dark"] .bg-pink-50, html[data-mode="dark"] .bg-pink-100 { background-color: var(--app-soft) !important; }
+html[data-theme="ocean"] .bg-purple-50, html[data-theme="meadow"] .bg-purple-50,
+html[data-mode="dark"] .bg-purple-50, html[data-mode="dark"] .bg-indigo-950 { background-color: var(--app-accent-soft) !important; }
+html[data-theme="ocean"] .bg-white, html[data-theme="meadow"] .bg-white,
+html[data-mode="dark"] .bg-white, html[data-mode="dark"] .bg-gray-50 { background-color: var(--app-surface) !important; }
+html[data-theme="ocean"] .border-pink-100, html[data-theme="meadow"] .border-pink-100,
+html[data-mode="dark"] .border-pink-100, html[data-mode="dark"] .border-pink-200 { border-color: var(--app-border) !important; }
+html[data-mode="dark"] .border-gray-100, html[data-mode="dark"] .border-violet-100,
+html[data-mode="dark"] .border-indigo-300\/30 { border-color: var(--app-border) !important; }
+html[data-theme="ocean"] .text-purple-500, html[data-theme="meadow"] .text-purple-500,
+html[data-mode="dark"] .text-purple-500, html[data-mode="dark"] .text-gray-500,
+html[data-mode="dark"] .text-gray-400 { color: var(--app-muted) !important; }
+html[data-mode="dark"] .text-gray-800, html[data-mode="dark"] .text-gray-700,
+html[data-mode="dark"] .text-gray-600 { color: var(--foreground) !important; }
+html[data-mode="dark"] aside { background: linear-gradient(180deg, #31245d 0%, #241e3b 100%) !important; }
+html[data-mode="dark"] main.bg-gradient-to-b, html[data-mode="dark"] main.bg-gradient-to-br { background-image: linear-gradient(to bottom, var(--app-soft), var(--app-accent-soft)) !important; }
+html[data-mode="dark"] aside.bg-gradient-to-b { background-image: linear-gradient(180deg, #31245d 0%, #241e3b 100%) !important; }
+html[data-mode="dark"] input, html[data-mode="dark"] textarea, html[data-mode="dark"] select { background-color: var(--app-surface) !important; color: var(--foreground) !important; border-color: var(--app-border) !important; }
+html[data-mode="dark"] .bg-black\/30 { background-color: #100c1e !important; }
+html[data-mode="dark"] .study-chat { background: var(--app-surface) !important; border-color: var(--app-border); }
+html[data-mode="dark"] .study-chat .bg-pink-50\/60 { background-color: var(--app-soft) !important; }
+html[data-theme="ocean"] .bg-purple-600, html[data-theme="ocean"] .bg-pink-500 { background-color: var(--app-accent) !important; }
+html[data-theme="meadow"] .bg-purple-600, html[data-theme="meadow"] .bg-pink-500 { background-color: var(--app-accent) !important; }
+html[data-theme="ocean"] .from-pink-500, html[data-theme="meadow"] .from-pink-500 { --tw-gradient-from: var(--app-accent) var(--tw-gradient-from-position); }
+html[data-theme="ocean"] .to-purple-600, html[data-theme="meadow"] .to-purple-600 { --tw-gradient-to: var(--app-accent-strong) var(--tw-gradient-to-position); }
+.chat-dot { display: inline-block; width: 5px; height: 5px; margin: 0 1px; border-radius: 999px; background: #8b5cf6; animation: chat-bounce 1s infinite ease-in-out; }
+.chat-dot:nth-child(2) { animation-delay: .15s; }.chat-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes chat-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
+
+@keyframes thought-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-9px) rotate(2deg); }
+}
+
+.thought-bubble { animation: thought-float 4s ease-in-out infinite; }

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Brain, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { apiUrl } from "@/lib/api";
 
 const Page = () => {
   const [EnteredOTP, setEnteredOTP] = useState("");
@@ -28,7 +29,7 @@ const Page = () => {
 
     try {
       console.log("before calling");
-      const response = await fetch("http://localhost:8000/verifyOTP", {
+      const response = await fetch(apiUrl("/verifyOTP"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

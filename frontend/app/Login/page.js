@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Brain, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { apiUrl } from "@/lib/api";
 
 const Page = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const Page = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/Login", {
+      const response = await fetch(apiUrl("/Login"), {
         method: "POST",
         
         headers: {
@@ -29,11 +30,12 @@ const Page = () => {
 
       localStorage.setItem("username", data.username);
       localStorage.setItem("email", data.email);
+      window.dispatchEvent(new Event("auth-changed"));
     
       const storedusername = localStorage.getItem("username");
      
       console.log(storedusername);
-      router.push("/");
+      router.push("/Dashboard");
     } catch (e) {
       console.log("Error while logging in on Login pg", e);
     }

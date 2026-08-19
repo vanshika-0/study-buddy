@@ -13,6 +13,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { apiUrl } from "@/lib/api";
 
 const Page = () => {
   const [input, setInput] = useState("");
@@ -39,12 +40,11 @@ const Page = () => {
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
-    if (storedEmail) {
-      setEmail(storedEmail);
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+    const timer = window.setTimeout(() => {
+      if (storedEmail) { setEmail(storedEmail); setIsLoggedIn(true); }
+      else setIsLoggedIn(false);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   function normalizeHistoryToOutput(history) {
@@ -80,7 +80,7 @@ const Page = () => {
 
     async function loadHistory() {
       try {
-        const response = await fetch("http://localhost:8000/getHistory", {
+        const response = await fetch(apiUrl("/getHistory"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
@@ -117,7 +117,7 @@ const Page = () => {
     const docId = output?.docId;
     if (!docId) return;
     try {
-      const response = await fetch("http://localhost:8000/deleteTask", {
+      const response = await fetch(apiUrl("/deleteTask"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ docId, taskIndex: originalIndex }),
@@ -141,7 +141,7 @@ const Page = () => {
   async function handleGenerate() {
     if (!isLoggedIn || !email) return;
     try {
-      const response = await fetch("http://localhost:8000/planner", {
+      const response = await fetch(apiUrl("/planner"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input, email }),
@@ -212,7 +212,7 @@ const Page = () => {
     const docId = output?.docId;
     if (!item || !docId) return;
     try {
-      const response = await fetch("http://localhost:8000/updateTask", {
+      const response = await fetch(apiUrl("/updateTask"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -289,7 +289,7 @@ const Page = () => {
     setIsAddingTask(false);
 
     try {
-      const response = await fetch("http://localhost:8000/addTask", {
+      const response = await fetch(apiUrl("/addTask"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ docId, task: newItem }),

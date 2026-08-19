@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from "react";
 import { Plus, X, Search, Trash2, Pin, Heart, Sparkles } from "lucide-react";
+import { apiUrl } from "@/lib/api";
 
 const FONT_HEADING = "'Baloo 2', ui-rounded, 'Segoe UI', sans-serif";
 const FONT_BODY = "'Quicksand', ui-rounded, 'Segoe UI', sans-serif";
@@ -14,8 +15,7 @@ const PALETTE = [
 ];
 
 // Point this at your FastAPI backend
-const API_BASE =  "http://localhost:8000";
-const NOTES_URL = `${API_BASE}/api/notes`;
+const NOTES_URL = apiUrl("/api/notes");
 
 
 function hashRotate(id) {
@@ -53,38 +53,52 @@ export default function ChotuNotes() {
   const [loaded, setLoaded] = useState(false);
   const [query, setQuery] = useState("");
   const [saveState, setSaveState] = useState("idle");
+  const [loadError, setLoadError] = useState("");
   const saveTimers = useRef({});
 
 
   // Load notes from MongoDB (via FastAPI) on mount
-useEffect(() => {
+  useEffect(() => {
+  let cancelled = false;
   async function loadNotes() {
     const email = localStorage.getItem("email");
      if(!email){
-    alert("Please login first!");
+    setLoadError("Please log in to view your notes.");
+    setLoaded(true);
     return;
   }
 
     try {
      const email = localStorage.getItem("email");
-
-const res = await fetch(
-  `${NOTES_URL}?email=${encodeURIComponent(email)}`
-);
+const controller = new AbortController();
+const timeout = window.setTimeout(() => controller.abort(), 8000);
+const res = await fetch(`${NOTES_URL}?email=${encodeURIComponent(email)}`, { signal: controller.signal });
+window.clearTimeout(timeout);
 
 if (!res.ok) throw new Error("Failed to fetch notes");
 
 const data = await res.json();
-setNotes(data.notes || []);
+if (cancelled) return;
+setNotes((data.notes || []).map((note, index) => ({
+  id: note.id || `legacy-${index}`,
+  text: typeof note.text === "string" ? note.text : "",
+  color: note.color || PALETTE[index % PALETTE.length].key,
+  pinned: Boolean(note.pinned),
+  createdAt: note.createdAt ? new Date(note.createdAt).getTime() : Date.now(),
+})));
+setLoadError("");
     } catch (e) {
+      if (cancelled) return;
       console.error("Could not load notes:", e);
       setNotes([]);
+      setLoadError(e.name === "AbortError" ? "Notes service took too long to respond. Please start the backend and try again." : "Could not load notes. Please check that the backend is running and try again.");
     }
 
-    setLoaded(true);
+    if (!cancelled) setLoaded(true);
   }
 
   loadNotes();
+  return () => { cancelled = true };
 }, []);
 
 
@@ -174,7 +188,7 @@ if (!res.ok) throw new Error("Failed to update note");
 }
 
   const filtered = notes.filter((n) =>
-    n.text.toLowerCase().includes(query.toLowerCase())
+    (n.text || "").toLowerCase().includes(query.toLowerCase())
   );
   const pinned = filtered.filter((n) => n.pinned);
   const rest = filtered.filter((n) => !n.pinned);
@@ -229,6 +243,8 @@ if (!res.ok) throw new Error("Failed to update note");
 
       {/* Notes grid */}
       <main className="px-5 sm:px-10 pb-24 pt-2 max-w-5xl mx-auto">
+        {!loaded && <div className="rounded-2xl bg-white p-6 text-center text-sm text-[#9C7B98]">Loading your notes...</div>}
+        {loadError && <div className="mb-4 rounded-2xl border border-pink-200 bg-white p-4 text-sm text-[#9C527D]">{loadError}</div>}
         {ordered.length === 0 && loaded && (
           <div className="text-center py-24">
             <p className="text-4xl mb-2">(´｡• ᵕ •｡`)</p>

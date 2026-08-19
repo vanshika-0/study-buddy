@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Brain, Eye, EyeOff, Sparkles } from 'lucide-react'
 import {useRouter} from "next/navigation";
+import { apiUrl } from "@/lib/api";
 
 
 
@@ -18,7 +19,7 @@ const Page = () => {
     e.preventDefault();
     console.log("passii",password);
     try{
-    const response = await fetch("http://localhost:8000/sendOTP",{
+    const response = await fetch(apiUrl("/sendOTP"),{
 
         method:"POST",
         headers:{

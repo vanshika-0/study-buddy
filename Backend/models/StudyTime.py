@@ -12,3 +12,4 @@ class DailyStudy(BaseModel):
 class StudyTimeRequest(BaseModel):
     email: str
     duration: int = Field(gt=0, description="Completed focus-session duration in seconds")
+
