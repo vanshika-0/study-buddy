@@ -5,6 +5,9 @@ from uuid import uuid4
 import groq
 import os
 import json
+import asyncio
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 from dotenv import load_dotenv
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -592,6 +595,30 @@ async def delete_task(data: DeleteTaskRequest):
 
 #d send_email func
 async def send_email(email: str, otp: str):
+
+    resend_key = os.getenv("RESEND_API_KEY")
+    if resend_key:
+        payload = json.dumps({
+            "from": os.getenv("RESEND_FROM", os.getenv("MAIL_FROM")),
+            "to": [email],
+            "subject": "Your OTP Code",
+            "text": f"Your OTP is: {otp}\n\nThis OTP is valid for 5 minutes.",
+        }).encode("utf-8")
+        request = Request(
+            "https://api.resend.com/emails",
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {resend_key}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            await asyncio.to_thread(urlopen, request, timeout=20)
+        except HTTPError as error:
+            detail = error.read().decode("utf-8", errors="replace")
+            raise ConnectionError(f"Resend email delivery failed: {detail}") from error
+        return
 
     message = MessageSchema(
         subject="Your OTP Code",
