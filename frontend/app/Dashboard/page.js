@@ -83,7 +83,8 @@ const Page = () => {
         setDashboard(activityData);
         setTodayTasks(scheduleData.tasks);
         setScheduleDate(scheduleData.date);
-        setRevisionTasks(revisionData.tasks);
+        const revisionDate = revisionData.date || scheduleData.date || toLocalDateString(new Date());
+        setRevisionTasks((revisionData.tasks || []).filter((task) => task.date === revisionDate));
         console.log("todayseconds", activityData.studyTime.todaySeconds);
       } catch (fetchError) {
         console.error(fetchError);

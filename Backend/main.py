@@ -468,13 +468,16 @@ async def get_today_schedule(email: str):
 
     today = datetime.now().date().isoformat()
     tasks = []
-    for history_doc in history.find({"email": email}, {"history": 1}):
-        schedule = get_schedule_from_doc(history_doc)
+    latest_history = history.find_one(
+        {"email": email}, {"history": 1}, sort=[("_id", -1)]
+    )
+    if latest_history:
+        schedule = get_schedule_from_doc(latest_history)
         for task_index, task in enumerate(schedule):
             if task.get("date") != today:
                 continue
             tasks.append({
-                "docId": str(history_doc["_id"]),
+                "docId": str(latest_history["_id"]),
                 "taskIndex": task_index,
                 "task": task.get("task", "Untitled topic"),
                 "description": task.get("description", ""),
@@ -495,13 +498,17 @@ async def get_revision_tasks(email: str):
     if not users.find_one({"email": email}, {"_id": 1}):
         raise HTTPException(status_code=404, detail="User not found")
 
+    today = datetime.now().date().isoformat()
     tasks = []
-    for history_doc in history.find({"email": email}, {"history": 1}):
-        for task_index, task in enumerate(get_schedule_from_doc(history_doc)):
-            if not task.get("revisionRequired", False):
+    latest_history = history.find_one(
+        {"email": email}, {"history": 1}, sort=[("_id", -1)]
+    )
+    if latest_history:
+        for task_index, task in enumerate(get_schedule_from_doc(latest_history)):
+            if task.get("date") != today or not task.get("revisionRequired", False):
                 continue
             tasks.append({
-                "docId": str(history_doc["_id"]),
+                "docId": str(latest_history["_id"]),
                 "taskIndex": task_index,
                 "task": task.get("task", "Untitled topic"),
                 "description": task.get("description", ""),
@@ -513,7 +520,7 @@ async def get_revision_tasks(email: str):
             })
 
     tasks.sort(key=lambda task: (task["date"] or "9999-99-99", task["start_time"] or "99:99", task["task"]))
-    return {"tasks": tasks}
+    return {"date": today, "tasks": tasks}
 
 
 
