@@ -70,3 +70,54 @@ html[data-theme="ocean"] .to-purple-600, html[data-theme="meadow"] .to-purple-60
 }
 
 .thought-bubble { animation: thought-float 4s ease-in-out infinite; }
+
+/* Shared small-screen safeguards. Page-specific layouts already provide
+   responsive Tailwind variants; these rules prevent fixed-width children and
+   floating panels from overflowing on phones. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+img, video, iframe { max-width: 100%; }
+
+@media (max-width: 640px) {
+  body { min-width: 320px; }
+  main { min-width: 0; width: 100%; }
+
+  aside > div {
+    gap: .65rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  aside > div > ul {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    gap: .25rem;
+  }
+
+  aside > div > ul a,
+  aside > div > ul button {
+    gap: .35rem;
+    padding: .55rem .6rem;
+    font-size: .75rem;
+  }
+
+  .study-chat {
+    bottom: 5.5rem !important;
+    left: .75rem !important;
+    right: .75rem !important;
+    width: auto !important;
+  }
+
+  .fixed.inset-0 {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  aside > div > ul a,
+  aside > div > ul button {
+    padding-left: .45rem;
+    padding-right: .45rem;
+    font-size: .7rem;
+  }
+}
