@@ -290,6 +290,7 @@ Rules:
 6. If the user doesn't specify a date, use today's date: {today}.
 7. Never use the example date from this prompt; use {today} when today is requested.
 8. Ensure no overlapping tasks.
+9. If the user asks to generate a planner/timetable for a month or any period but does not provide their daily routine, available study timings, subjects, or any timetable information, do not create a schedule on your own. Return an empty schedule: {"schedule": []}
 
 User Input:
 {data.prompt}
