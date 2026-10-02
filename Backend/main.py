@@ -534,7 +534,7 @@ async def get_revision_tasks(email: str):
     )
     if latest_history:
         for task_index, task in enumerate(get_schedule_from_doc(latest_history)):
-            if task.get("date") != today or not task.get("revisionRequired", False):
+            if not task.get("revisionRequired", False):
                 continue
             tasks.append({
                 "docId": str(latest_history["_id"]),
